@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#EDF0F3">
+  <meta name="color-scheme" content="light">
+  <title>Welcome to Response Lab</title>
+  <style>
+    :root {
+      --paper: #EDF0F3; --ink: #101820; --teal: #2C4A6E; --muted: #626F7A;
+      --line: #D8DEE3; --terracotta: #A86500; --sage: #E3E9EF; --white: #101820;
+      --welcome-safe-top: env(safe-area-inset-top, 0px);
+      --welcome-safe-bottom: env(safe-area-inset-bottom, 0px);
+      --welcome-safe-left: env(safe-area-inset-left, 0px);
+      --welcome-safe-right: env(safe-area-inset-right, 0px);
+      --footer-height: calc(142px + var(--welcome-safe-bottom));
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink); background: var(--paper); color-scheme: light;
+      -webkit-text-size-adjust: 100%;
+    }
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+    button { font: inherit; -webkit-tap-highlight-color: transparent; cursor: pointer; }
+    button:focus-visible, .slides:focus-visible { outline: 3px solid var(--terracotta); outline-offset: 4px; }
+    [hidden] { display: none !important; }
+    .shell { height: 100vh; height: 100dvh; display: flex; flex-direction: column; padding-bottom: var(--footer-height); }
+    .masthead { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex: none; width: 100%; max-width: 1100px; margin: 0 auto; padding: calc(24px + var(--welcome-safe-top)) calc(28px + var(--welcome-safe-right)) 18px calc(28px + var(--welcome-safe-left)); }
+    .brand { display: flex; align-items: center; gap: 10px; font-size: 18px; letter-spacing: -.6px; font-weight: 650; }
+    .brand svg, .brand img { width: 31px; height: 31px; color: var(--teal); }
+    .brand img { border-radius: 7px; }
+    .edition { font-size: 10px; font-weight: 650; letter-spacing: 1.6px; color: var(--muted); }
+    .slides { display: flex; flex: 1; min-height: 0; width: 100%; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+    .slides::-webkit-scrollbar, .slide::-webkit-scrollbar { display: none; }
+    .slide { flex: 0 0 100%; width: 100%; min-width: 0; height: 100%; overflow-y: auto; overscroll-behavior-y: contain; scroll-snap-align: start; scroll-snap-stop: always; scrollbar-width: none; }
+    .slide-inner { max-width: 510px; min-height: 100%; margin: 0 auto; display: flex; flex-direction: column; justify-content: center; gap: 25px; padding: 8px calc(28px + var(--welcome-safe-right)) 24px calc(28px + var(--welcome-safe-left)); }
+    .visual { position: relative; flex: none; width: 100%; aspect-ratio: 1.34; border: 1px solid #D8DEE3; border-radius: 20px; background: #E3E9EF; overflow: hidden; }
+    .visual svg { display: block; width: 100%; height: 100%; }
+    .visual text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .visual .serif { font-family: Georgia, "Times New Roman", serif; }
+    .copy { padding: 0 1px; }
+    .visual .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    .model-note { margin: 15px 0 0; padding: 12px 13px; border-left: 2px solid var(--terracotta); background: #F5F0E7; color: #69521F; font-size: 12px; line-height: 1.5; }
+    .model-note strong { display: block; font-size: 11px; margin-bottom: 3px; color: #7C5408; }
+    .brand svg { flex: none; }
+    .privacy-note { line-height: 1.5; }
+    .eyebrow { margin: 0 0 13px; color: var(--teal); font-size: 10px; font-weight: 700; letter-spacing: 2.1px; text-transform: uppercase; }
+    h1, h2 { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: clamp(32px, 8.6vw, 42px); line-height: 1.10; font-weight: 700; letter-spacing: -1.25px; }
+    .copy p.description { max-width: 390px; margin: 17px 0 0; color: var(--muted); font-size: 16px; line-height: 1.55; letter-spacing: -.15px; }
+    .privacy-note { display: flex; align-items: center; gap: 7px; margin: 16px 0 0; font-size: 12px; color: var(--teal); }
+    .privacy-note svg { width: 14px; height: 14px; flex: none; }
+    .action-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--paper); z-index: 10; padding: 0 calc(28px + var(--welcome-safe-right)) calc(18px + var(--welcome-safe-bottom)) calc(28px + var(--welcome-safe-left)); }
+    .actions { max-width: 454px; margin: 0 auto; }
+    .navigation { display: flex; align-items: center; justify-content: space-between; height: 53px; gap: 12px; }
+    .back { border: 0; background: transparent; color: var(--muted); font-size: 13px; min-width: 58px; min-height: 44px; text-align: left; padding: 8px 0; }
+    .back:disabled { visibility: hidden; }
+    .dots { display: flex; align-items: center; gap: 0; }
+    .dot { display: flex; align-items: center; justify-content: center; width: 36px; height: 44px; border: 0; background: transparent; padding: 0; }
+    .dot::before { content: ""; width: 6px; height: 6px; border-radius: 10px; background: #B7C4D0; transition: width .2s, background .2s; }
+    .dot[aria-current="step"]::before { width: 24px; background: var(--teal); }
+    .counter { min-width: 58px; text-align: right; color: var(--muted); font-size: 11px; letter-spacing: 1.5px; font-variant-numeric: tabular-nums; }
+    .primary { width: 100%; min-height: 56px; border: 0; border-radius: 13px; background: var(--teal); color: #FFFFFF; display: flex; justify-content: center; align-items: center; gap: 12px; padding: 17px 24px; font-size: 16px; font-weight: 600; transition: background .15s, transform .15s; }
+    .primary:active { background: #213A58; transform: scale(.99); }
+    .primary svg { width: 19px; height: 19px; }
+    .footer-note { margin: 12px 0 0; text-align: center; color: var(--muted); font-size: 10px; line-height: 1.5; letter-spacing: .3px; }
+    .preview-message { margin: 0; font-size: 12px; line-height: 1.5; color: var(--teal); text-align: center; }
+    .preview-message:not(:empty) { margin-top: 10px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+    @media (max-width: 359px) {
+      .masthead { padding-right: calc(22px + var(--welcome-safe-right)); padding-left: calc(22px + var(--welcome-safe-left)); }
+      .edition { display: none; }
+      .slide-inner { padding-left: calc(22px + var(--welcome-safe-left)); padding-right: calc(22px + var(--welcome-safe-right)); gap: 21px; }
+      .action-bar { padding-left: calc(22px + var(--welcome-safe-left)); padding-right: calc(22px + var(--welcome-safe-right)); }
+      h1, h2 { font-size: 32px; }
+      .copy p.description { font-size: 15px; }
+    }
+    @media (max-height: 730px) and (max-width: 600px) {
+      .masthead { padding-top: calc(16px + var(--welcome-safe-top)); padding-bottom: 10px; }
+      .slide-inner { gap: 20px; justify-content: flex-start; }
+      .visual { aspect-ratio: 1.56; }
+      .copy p.description { margin-top: 13px; }
+      .eyebrow { margin-bottom: 11px; }
+      .action-bar { padding-bottom: calc(12px + var(--welcome-safe-bottom)); }
+      .navigation { height: 47px; }
+      .primary { min-height: 52px; padding-top: 15px; padding-bottom: 15px; }
+      .footer-note { margin-top: 9px; }
+    }
+    /* The native both-safe WebView is shorter than the device screen. Keep
+       the final disclosure in view on phone-height viewports; smaller screens
+       can still scroll the full slide without moving the fixed actions. */
+    @media (max-width: 600px) and (max-height: 820px) {
+      #slide-3 .slide-inner { justify-content: flex-start; }
+      #slide-3 .visual { aspect-ratio: 1.8; }
+    }
+    @media (min-width: 740px) {
+      .masthead { padding-top: calc(32px + var(--welcome-safe-top)); }
+      .slide-inner { max-width: 1100px; display: grid; grid-template-columns: 1.05fr 1fr; align-items: center; gap: clamp(32px, 6vw, 75px); padding-top: 28px; padding-bottom: 40px; }
+      .visual { aspect-ratio: 1.1; }
+      .copy { padding-right: 15px; }
+      h1, h2 { font-size: clamp(42px, 5.3vw, 60px); }
+      .copy p.description { font-size: 18px; }
+      .eyebrow { font-size: 11px; }
+      .action-bar { padding-bottom: calc(24px + var(--welcome-safe-bottom)); }
+    }
+    @media (orientation: landscape) and (max-height: 550px) {
+      .masthead { padding-top: calc(10px + var(--welcome-safe-top)); padding-bottom: 4px; }
+      .brand { font-size: 16px; }
+      .brand svg, .brand img { width: 25px; height: 25px; }
+      .slide-inner { display: grid; max-width: 920px; grid-template-columns: 1fr 1.15fr; gap: 28px; padding-top: 10px; padding-bottom: 18px; }
+      .visual { aspect-ratio: 1.5; max-width: 310px; }
+      h1, h2 { font-size: 33px; }
+      .eyebrow { font-size: 9px; margin-bottom: 9px; }
+      .copy p.description { font-size: 14px; margin-top: 11px; }
+      .privacy-note { font-size: 11px; margin-top: 10px; }
+      .actions { max-width: 850px; display: grid; grid-template-columns: 1fr 1.15fr; align-items: center; column-gap: 28px; }
+      .navigation { height: 44px; }
+      .primary { min-height: 46px; padding: 12px 20px; border-radius: 14px; }
+      .footer-note { grid-column: 2; margin-top: 6px; }
+      .preview-message { grid-column: 1 / -1; }
+      .action-bar { padding-bottom: calc(9px + var(--welcome-safe-bottom)); }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before { transition: none !important; scroll-behavior: auto !important; } }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="masthead">
+      <div class="brand">
+        <svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#2C4A6E"/><path d="m7 11 9-4 9 4-9 4-9-4Z" stroke="#FFFFFF" stroke-width="1.4" stroke-linejoin="round"/><path d="m7 16 9 4 9-4M7 21l9 4 9-4" stroke="#FFFFFF" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Response Lab</span>
+      </div>
+      <span class="edition">PAVEMENT / RESPONSE</span>
+    </header>
+    <main id="slides" class="slides" aria-label="Welcome to Response Lab" aria-roledescription="carousel" tabindex="0">
+      <section id="slide-1" class="slide" role="group" aria-roledescription="slide" aria-label="1 of 3" aria-labelledby="title-1">
+        <div class="slide-inner">
+          <div class="visual">
+            <svg viewBox="0 0 360 270" role="img" aria-labelledby="layers-title layers-desc">
+              <title id="layers-title">A layered pavement beneath a circular wheel load</title>
+              <desc id="layers-desc">Surface, base, subbase and subgrade form the section. Thickness, modulus and Poisson's ratio describe each layer; wheel load and tire pressure describe the load. This diagram is illustrative.</desc>
+              <defs>
+                <pattern id="layer-grid" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0V24" fill="none" stroke="#CCD6DF" stroke-width=".6"/></pattern>
+                <pattern id="subgrade-hatch" width="9" height="9" patternUnits="userSpaceOnUse"><path d="m-2 2 4-4M0 9 9 0M7 11l4-4" stroke="#93A8B9" stroke-width=".7"/></pattern>
+              </defs>
+              <rect width="360" height="270" fill="url(#layer-grid)"/>
+              <text x="24" y="29" font-size="10" font-weight="700" letter-spacing="1.15" fill="#2C4A6E">ONE SECTION · ONE WHEEL LOAD</text>
+              <rect x="95" y="47" width="68" height="35" rx="12" fill="#101820"/>
+              <path d="M108 52v24m13-24v24m13-24v24m13-24v24" stroke="#5B6771" stroke-width="2"/>
+              <path d="M129 87v18m-6-6 6 6 6-6" fill="none" stroke="#D9772E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <text x="183" y="62" font-size="11" fill="#101820">Wheel load</text>
+              <text x="183" y="79" font-size="10" fill="#626F7A">+ tire pressure</text>
+              <rect x="27" y="113" width="204" height="23" fill="#2C4A6E"/>
+              <rect x="27" y="136" width="204" height="34" fill="#5A7793"/>
+              <rect x="27" y="170" width="204" height="40" fill="#8FA6B8"/>
+              <rect x="27" y="210" width="204" height="31" fill="#C6D2DA"/>
+              <rect x="27" y="210" width="204" height="31" fill="url(#subgrade-hatch)"/>
+              <path d="M103 111h52" stroke="#D9772E" stroke-width="4" stroke-linecap="round"/>
+              <path d="m103 114-46 125m98-125 46 125" fill="none" stroke="#D9772E" stroke-width="1.5" stroke-dasharray="4 5" opacity=".75"/>
+              <path d="M231 125h13m-13 28h13m-13 37h13m-13 35h13" stroke="#8B9BA8"/>
+              <text x="254" y="128" font-size="10" fill="#2C4A6E">Surface</text>
+              <text x="254" y="156" font-size="10" fill="#2C4A6E">Base</text>
+              <text x="254" y="193" font-size="10" fill="#2C4A6E">Subbase</text>
+              <text x="254" y="228" font-size="10" fill="#2C4A6E">Subgrade</text>
+              <text x="27" y="258" class="mono" font-size="8.5" letter-spacing=".4" fill="#626F7A">THICKNESS / MODULUS / POISSON'S RATIO</text>
+            </svg>
+          </div>
+          <div class="copy">
+            <p class="eyebrow">01 / Define the structure</p>
+            <h1 id="title-1">Build the section.<br>Set the wheel load.</h1>
+            <p class="description">Set each layer’s thickness, modulus and Poisson’s ratio. Add wheel load and tire pressure to define the contact area.</p>
+          </div>
+        </div>
+      </section>
+      <section id="slide-2" class="slide" role="group" aria-roledescription="slide" aria-label="2 of 3" aria-labelledby="title-2" aria-hidden="true" inert>
+        <div class="slide-inner">
+          <div class="visual">
+            <svg viewBox="0 0 360 270" role="img" aria-labelledby="response-title response-desc">
+              <title id="response-title">Response with depth, surface deflection and sensitivity</title>
+              <desc id="response-desc">Illustrative orange stress and teal strain curves change with depth. Two smaller plots represent a deflection basin and response sensitivity to changing a section property. These are diagrams, not calculated results.</desc>
+              <rect x="20" y="18" width="320" height="146" rx="11" fill="#FFFFFF" stroke="#C8D3DD"/>
+              <text x="36" y="40" font-size="9" font-weight="700" letter-spacing="1.1" fill="#2C4A6E">RESPONSE / DEPTH</text>
+              <path d="M91 56h230v21H91Z" fill="#E3E9EF"/>
+              <path d="M91 77h230v28H91Z" fill="#EDF1F5"/>
+              <path d="M91 105h230v38H91Z" fill="#F4F6F8"/>
+              <path d="M91 51v92h230M91 77h230M91 105h230" fill="none" stroke="#C8D3DD" stroke-width=".8"/>
+              <text x="35" y="66" class="mono" font-size="8" fill="#626F7A">surface</text>
+              <text x="35" y="141" class="mono" font-size="8" fill="#626F7A">deeper</text>
+              <path d="M303 56C247 69 173 83 131 139" fill="none" stroke="#D9772E" stroke-width="2.5" stroke-linecap="round"/>
+              <path d="M148 56C143 76 127 80 147 94s34 14 48 45" fill="none" stroke="#2A8CA6" stroke-width="2.5" stroke-linecap="round"/>
+              <path d="M91 98h230" stroke="#2C4A6E" stroke-width=".9" stroke-dasharray="3 4"/>
+              <circle cx="177" cy="98" r="3.4" fill="#FFFFFF" stroke="#D9772E" stroke-width="1.7"/>
+              <circle cx="154" cy="98" r="3.4" fill="#FFFFFF" stroke="#2A8CA6" stroke-width="1.7"/>
+              <path d="M211 35h12" stroke="#D9772E" stroke-width="2"/><text x="228" y="38" font-size="8" fill="#626F7A">Stress</text>
+              <path d="M272 35h12" stroke="#2A8CA6" stroke-width="2"/><text x="289" y="38" font-size="8" fill="#626F7A">Strain</text>
+              <rect x="20" y="177" width="153" height="66" rx="9" fill="#FFFFFF" stroke="#C8D3DD"/>
+              <rect x="186" y="177" width="154" height="66" rx="9" fill="#FFFFFF" stroke="#C8D3DD"/>
+              <text x="33" y="195" font-size="8" font-weight="700" letter-spacing=".6" fill="#2C4A6E">DEFLECTION BASIN</text>
+              <text x="199" y="195" font-size="8" font-weight="700" letter-spacing=".6" fill="#2C4A6E">SENSITIVITY</text>
+              <path d="M33 208h127m-127 24h127M199 205v27h128" fill="none" stroke="#D8DEE3" stroke-width=".8"/>
+              <path d="M36 210c29 1 34 20 60 20s34-19 61-20" fill="none" stroke="#2C4A6E" stroke-width="2" stroke-linecap="round"/>
+              <path d="M207 209c29 0 32 19 51 19s35-4 60-5" fill="none" stroke="#2A8CA6" stroke-width="2" stroke-linecap="round"/>
+              <text x="180" y="259" text-anchor="middle" font-size="8" letter-spacing=".7" fill="#626F7A">ILLUSTRATIVE RESPONSE · NOT A COMPUTED EXAMPLE</text>
+            </svg>
+          </div>
+          <div class="copy">
+            <p class="eyebrow">02 / Read the response</p>
+            <h2 id="title-2">Follow the load.<br>Explore what changes.</h2>
+            <p class="description">Inspect stress and strain with depth, view the deflection basin, and vary thickness or modulus to compare response trends.</p>
+          </div>
+        </div>
+      </section>
+      <section id="slide-3" class="slide" role="group" aria-roledescription="slide" aria-label="3 of 3" aria-labelledby="title-3" aria-hidden="true" inert>
+        <div class="slide-inner">
+          <div class="visual">
+            <svg viewBox="0 0 360 270" role="img" aria-labelledby="record-title record-desc">
+              <title id="record-title">Local sections and shareable response records</title>
+              <desc id="record-desc">An illustrative saved pavement section connects to a CSV profile and a PDF summary. The equivalent-layer screening method remains visible alongside the records.</desc>
+              <rect x="30" y="44" width="165" height="159" rx="12" fill="#FFFFFF" stroke="#C8D3DD"/>
+              <rect x="40" y="34" width="165" height="159" rx="12" fill="#FFFFFF" stroke="#C8D3DD"/>
+              <text x="57" y="60" font-size="9" font-weight="700" letter-spacing=".8" fill="#2C4A6E">LOCAL SECTIONS</text>
+              <rect x="57" y="76" width="130" height="17" rx="3" fill="#2C4A6E"/>
+              <rect x="57" y="96" width="130" height="23" rx="3" fill="#5A7793"/>
+              <rect x="57" y="122" width="130" height="25" rx="3" fill="#8FA6B8"/>
+              <rect x="57" y="150" width="130" height="13" rx="3" fill="#C6D2DA"/>
+              <circle cx="62" cy="177" r="3" fill="#2F6B43"/><text x="72" y="180" font-size="8" fill="#626F7A">Saved on this device</text>
+              <path d="M209 111h26m-5-5 5 5-5 5" fill="none" stroke="#7B91A5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M249 57h48l20 20v55h-68V57Z" fill="#FFFFFF" stroke="#B8C8D5"/>
+              <path d="M297 57v20h20" fill="#E3E9EF" stroke="#B8C8D5"/>
+              <text x="262" y="99" class="mono" font-size="13" font-weight="700" fill="#2A8CA6">CSV</text>
+              <path d="M261 110h44m-44 6h44m-28-6v12m14-12v12" stroke="#B8C8D5" stroke-width=".8"/>
+              <rect x="243" y="146" width="80" height="42" rx="8" fill="#FFFFFF" stroke="#B8C8D5"/>
+              <path d="M256 158h12m-12 6h12m-12 6h8" stroke="#D9772E" stroke-width="1.3" stroke-linecap="round"/>
+              <text x="277" y="171" class="mono" font-size="13" font-weight="700" fill="#2C4A6E">PDF</text>
+              <rect x="30" y="220" width="293" height="29" rx="6" fill="#F5F0E7" stroke="#DFD2B8"/>
+              <path d="m44 229-4 8h8l-4-8Zm0 3v2m0 1v.2" fill="none" stroke="#A86500" stroke-width=".9" stroke-linejoin="round" stroke-linecap="round"/>
+              <text x="56" y="238" font-size="8.5" font-weight="600" fill="#7C5408">EQUIVALENT-LAYER SCREENING MODEL</text>
+            </svg>
+          </div>
+          <div class="copy">
+            <p class="eyebrow">03 / Keep a useful record</p>
+            <h2 id="title-3">Save your section.<br>Share the response.</h2>
+            <p class="description">Keep sections on this device. Export response profiles as CSV or a PDF summary when you need a record.</p>
+            <p class="model-note"><strong>Screening, with visible limits</strong>An equivalent-layer model using a Boussinesq field supports preliminary review. Confirm design decisions with a suitable layered analysis and engineering judgement.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <footer class="action-bar">
+    <div class="actions">
+      <nav class="navigation" aria-label="Introduction slides">
+        <button id="backSlide" class="back" type="button" disabled>Back</button>
+        <div class="dots">
+          <button class="dot" type="button" data-slide="0" aria-label="Go to slide 1" aria-current="step"></button>
+          <button class="dot" type="button" data-slide="1" aria-label="Go to slide 2"></button>
+          <button class="dot" type="button" data-slide="2" aria-label="Go to slide 3"></button>
+        </div>
+        <span id="slideCounter" class="counter" aria-hidden="true">01 / 03</span>
+      </nav>
+      <button id="nextSlide" class="primary" type="button"><span>Next</span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <!-- Keep this element in the initial DOM. It suppresses the native fallback entry button. -->
+      <button id="enterApp" data-welcome-enter class="primary" type="button" hidden disabled><span>Get Started</span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <p class="footer-note">Layered inputs. Visible response. Clear limits.</p>
+      <p id="previewMessage" class="preview-message" role="status" aria-live="polite"></p>
+    </div>
+  </footer>
+  <p id="slideStatus" class="sr-only" role="status" aria-live="polite" aria-atomic="true">Slide 1 of 3</p>
+  <script>
+    (function () {
+      "use strict";
+      var viewport = document.getElementById("slides");
+      var slides = Array.from(viewport.querySelectorAll(".slide"));
+      var dots = Array.from(document.querySelectorAll("[data-slide]"));
+      var next = document.getElementById("nextSlide");
+      var back = document.getElementById("backSlide");
+      var enter = document.getElementById("enterApp");
+      var footer = document.querySelector(".action-bar");
+      var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+      var index = 0, frame = 0, resizeFrame = 0;
+
+      function reflectSlide(newIndex) {
+        var previous = index;
+        index = Math.max(0, Math.min(slides.length - 1, newIndex));
+        slides.forEach(function (slide, i) {
+          slide.inert = i !== index;
+          if (i === index) slide.removeAttribute("aria-hidden");
+          else slide.setAttribute("aria-hidden", "true");
+        });
+        dots.forEach(function (dot, i) {
+          if (i === index) dot.setAttribute("aria-current", "step");
+          else dot.removeAttribute("aria-current");
+        });
+        var focusWasNext = document.activeElement === next;
+        var focusWasEnter = document.activeElement === enter;
+        var focusWasBack = document.activeElement === back;
+        back.disabled = index === 0;
+        next.hidden = index === slides.length - 1;
+        next.disabled = next.hidden;
+        enter.hidden = index !== slides.length - 1;
+        enter.disabled = enter.hidden;
+        document.getElementById("slideCounter").textContent = "0" + (index + 1) + " / 03";
+        document.getElementById("slideStatus").textContent = "Slide " + (index + 1) + " of 3";
+        if (previous !== index) {
+          document.getElementById("previewMessage").textContent = "";
+          if (focusWasNext && next.hidden) enter.focus({ preventScroll: true });
+          if ((focusWasEnter && enter.hidden) || (focusWasBack && back.disabled)) next.focus({ preventScroll: true });
+        }
+      }
+      function goToSlide(target) {
+        target = Math.max(0, Math.min(slides.length - 1, target));
+        viewport.scrollTo({ left: target * viewport.clientWidth, behavior: reducedMotion.matches ? "instant" : "smooth" });
+      }
+      function syncScroll() {
+        if (frame) return;
+        frame = requestAnimationFrame(function () {
+          frame = 0;
+          reflectSlide(Math.round(viewport.scrollLeft / Math.max(1, viewport.clientWidth)));
+        });
+      }
+      next.addEventListener("click", function () { goToSlide(index + 1); });
+      back.addEventListener("click", function () { goToSlide(index - 1); });
+      dots.forEach(function (dot) { dot.addEventListener("click", function () { goToSlide(Number(dot.dataset.slide)); }); });
+      viewport.addEventListener("scroll", syncScroll, { passive: true });
+      document.addEventListener("keydown", function (event) {
+        if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+        if (event.key === "ArrowRight" || event.key === "ArrowLeft" || event.key === "Home" || event.key === "End") {
+          event.preventDefault();
+          goToSlide(event.key === "Home" ? 0 : event.key === "End" ? 2 : index + (event.key === "ArrowRight" ? 1 : -1));
+        }
+      });
+      enter.addEventListener("click", function (event) {
+        if (index !== slides.length - 1 || enter.hidden || enter.disabled) return;
+        // The native footer captures clicks on #enterApp and prevents default.
+        // Honor that binding, so a single tap produces one bridge request.
+        if (event.defaultPrevented) return;
+        if (window.WelcomeBridge && typeof window.WelcomeBridge.enterApp === "function") {
+          window.WelcomeBridge.enterApp();
+        } else {
+          document.getElementById("previewMessage").textContent = "Preview complete. Open Response Lab to explore your pavement section.";
+          measureFooter();
+        }
+      });
+      function measureFooter() {
+        document.documentElement.style.setProperty("--footer-height", Math.ceil(footer.getBoundingClientRect().height) + "px");
+      }
+      function alignAfterResize() {
+        if (resizeFrame) cancelAnimationFrame(resizeFrame);
+        resizeFrame = requestAnimationFrame(function () {
+          resizeFrame = 0;
+          measureFooter();
+          viewport.scrollTo({ left: index * viewport.clientWidth, behavior: "instant" });
+        });
+      }
+      var bridge = window.WelcomeBridge;
+      if (bridge) {
+        if (typeof bridge.setUIType === "function") bridge.setUIType(4);
+        if (typeof bridge.setBackgroundColor === "function") bridge.setBackgroundColor("#EDF0F3");
+        if (typeof bridge.setStatusColor === "function") bridge.setStatusColor("#EDF0F3");
+        // Do not replace native external-link rules from this document.
+      }
+      reflectSlide(0);
+      measureFooter();
+      window.addEventListener("resize", alignAfterResize);
+      window.addEventListener("welcome-layout", alignAfterResize);
+      if (typeof ResizeObserver !== "undefined") new ResizeObserver(measureFooter).observe(footer);
+    }());
+  </script>
+</body>
+</html>
